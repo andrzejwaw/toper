@@ -14,16 +14,20 @@ class Client implements ClientInterface
      */
     private $guzzleClientFactory;
 
+    private $metrics;
+
     /**
      * @param HostPoolProviderInterface    $hostPoolProvider
-     * @param GuzzleClientFactoryInterface $guzzleClientFactory
+     * @param GuzzleClientFactoryInterface  $guzzleClientFactory
      */
     public function __construct(
         HostPoolProviderInterface $hostPoolProvider,
-        GuzzleClientFactoryInterface $guzzleClientFactory
+        GuzzleClientFactoryInterface $guzzleClientFactory,
+        MetricsInterface $metrics = null
     ) {
         $this->hostPoolProvider = $hostPoolProvider;
         $this->guzzleClientFactory = $guzzleClientFactory;
+        $this->metrics = $metrics;
     }
 
     /**
@@ -39,7 +43,8 @@ class Client implements ClientInterface
             $url,
             $binds,
             $this->hostPoolProvider->get(),
-            $this->guzzleClientFactory->create()
+            $this->guzzleClientFactory->create(),
+            $this->metrics
         );
     }
 
@@ -56,7 +61,8 @@ class Client implements ClientInterface
             $url,
             $binds,
             $this->hostPoolProvider->get(),
-            $this->guzzleClientFactory->create()
+            $this->guzzleClientFactory->create(),
+            $this->metrics
         );
     }
 
@@ -73,7 +79,8 @@ class Client implements ClientInterface
             $url,
             $binds,
             $this->hostPoolProvider->get(),
-            $this->guzzleClientFactory->create()
+            $this->guzzleClientFactory->create(),
+            $this->metrics
         );
     }
 
@@ -90,7 +97,8 @@ class Client implements ClientInterface
             $url,
             $binds,
             $this->hostPoolProvider->get(),
-            $this->guzzleClientFactory->create()
+            $this->guzzleClientFactory->create(),
+            $this->metrics
         );
     }
 
@@ -107,7 +115,8 @@ class Client implements ClientInterface
             $url,
             $binds,
             $this->hostPoolProvider->get(),
-            $this->guzzleClientFactory->create()
+            $this->guzzleClientFactory->create(),
+            $this->metrics
         );
     }
 }

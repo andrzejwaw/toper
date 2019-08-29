@@ -142,6 +142,8 @@ class Request
 
                 $this->updateQueryParams($guzzleRequest);
 
+                $this->measure(sprintf("topper.request.%s.count", $this->method), $this->url);
+
                 return new Response($guzzleRequest->send());
             } catch (ClientErrorResponseException $e) {
                 return new Response($e->getResponse());
@@ -212,5 +214,19 @@ class Request
         foreach ($this->queryParams as $name => $value) {
             $request->getQuery()->add($name, $value);
         }
+    }
+
+    private function measure($metric, $url) {
+        $this->debug(" measuring metric $metric for $url");
+        if ($this->metrics != null) {
+            $this->debug("metrics not null - SENDING $metric");
+            $this->metrics->increment($metric);
+        } else {
+            $this->debug(" metricsClass is null - :( $metric");
+        }
+    }
+
+    private function debug($message) {
+        file_put_contents("/var/log/allegro/statsd.log", "\n".date("Ymd H:i:s")." $message", FILE_APPEND);
     }
 }
