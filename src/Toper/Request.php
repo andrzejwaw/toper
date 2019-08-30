@@ -165,10 +165,10 @@ class Request
                     )
                 );
 
-                if (!is_null($this->proxy)) {
-                    $this->debug("Proxy is false null hurrey");
+                if (!is_null($this->proxy) && $this->proxy) {
+                    $this->debug("Proxy is true null hurrey, will add headers and so on");
                 } else {
-                    $this->debug("Proxy is true :( will addheaders whatever");
+                    $this->debug("No proxy set :(, will not add any header");
                 }
 
                 $guzzleRequest->addHeaders($this->headers);
