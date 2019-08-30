@@ -61,24 +61,32 @@ class Request
     private $headers = array();
 
     /**
+     * @var MetricsInterface
+     */
+    private $metrics = array();
+
+    /**
      * @param string                $method
      * @param string                $url
      * @param array                 $binds
      * @param HostPoolInterface     $hostPool
      * @param GuzzleClientInterface $guzzleClient
+     * @param MetricsInterface      $metrics
      */
     public function __construct(
         $method,
         $url,
         array $binds,
         HostPoolInterface $hostPool,
-        GuzzleClientInterface $guzzleClient
+        GuzzleClientInterface $guzzleClient,
+        MetricsInterface $metrics = null
     ) {
         $this->method = $method;
         $this->url = $url;
         $this->binds = $binds;
         $this->hostPool = $hostPool;
         $this->guzzleClient = $guzzleClient;
+        $this->metrics = $metrics;
     }
 
     /**
