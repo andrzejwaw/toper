@@ -132,7 +132,8 @@ class Client implements ClientInterface
             $binds,
             $this->hostPoolProvider->get(),
             $this->guzzleClientFactory->create(),
-            $this->metrics
+            $this->metrics,
+            $this->proxy
         );
     }
 }
