@@ -14,20 +14,32 @@ class Client implements ClientInterface
      */
     private $guzzleClientFactory;
 
+    /**
+     * @var MetricsInterface
+     */
     private $metrics;
 
     /**
-     * @param HostPoolProviderInterface    $hostPoolProvider
+     * @var bool
+     */
+    private $proxy;
+
+    /**
+     * @param HostPoolProviderInterface     $hostPoolProvider
      * @param GuzzleClientFactoryInterface  $guzzleClientFactory
+     * @param MetricsInterface|null         $metrics
+     * @param bool                          $proxy
      */
     public function __construct(
         HostPoolProviderInterface $hostPoolProvider,
         GuzzleClientFactoryInterface $guzzleClientFactory,
-        MetricsInterface $metrics = null
+        MetricsInterface $metrics = null,
+        $proxy = false
     ) {
         $this->hostPoolProvider = $hostPoolProvider;
         $this->guzzleClientFactory = $guzzleClientFactory;
         $this->metrics = $metrics;
+        $this->proxy = $proxy;
     }
 
     /**
@@ -44,7 +56,8 @@ class Client implements ClientInterface
             $binds,
             $this->hostPoolProvider->get(),
             $this->guzzleClientFactory->create(),
-            $this->metrics
+            $this->metrics,
+            $this->proxy
         );
     }
 
@@ -62,7 +75,8 @@ class Client implements ClientInterface
             $binds,
             $this->hostPoolProvider->get(),
             $this->guzzleClientFactory->create(),
-            $this->metrics
+            $this->metrics,
+            $this->proxy
         );
     }
 
@@ -80,7 +94,8 @@ class Client implements ClientInterface
             $binds,
             $this->hostPoolProvider->get(),
             $this->guzzleClientFactory->create(),
-            $this->metrics
+            $this->metrics,
+            $this->proxy
         );
     }
 
@@ -98,7 +113,8 @@ class Client implements ClientInterface
             $binds,
             $this->hostPoolProvider->get(),
             $this->guzzleClientFactory->create(),
-            $this->metrics
+            $this->metrics,
+            $this->proxy
         );
     }
 

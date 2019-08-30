@@ -66,12 +66,18 @@ class Request
     private $metrics = array();
 
     /**
-     * @param string                $method
-     * @param string                $url
-     * @param array                 $binds
-     * @param HostPoolInterface     $hostPool
+     * @var bool
+     */
+    private $proxy;
+
+    /**
+     * @param string $method
+     * @param string $url
+     * @param array $binds
+     * @param HostPoolInterface $hostPool
      * @param GuzzleClientInterface $guzzleClient
-     * @param MetricsInterface      $metrics
+     * @param MetricsInterface $metrics
+     * @param bool $proxy
      */
     public function __construct(
         $method,
@@ -79,7 +85,9 @@ class Request
         array $binds,
         HostPoolInterface $hostPool,
         GuzzleClientInterface $guzzleClient,
-        MetricsInterface $metrics = null
+        MetricsInterface $metrics = null,
+        $proxy = false
+
     ) {
         $this->method = $method;
         $this->url = $url;
@@ -87,6 +95,7 @@ class Request
         $this->hostPool = $hostPool;
         $this->guzzleClient = $guzzleClient;
         $this->metrics = $metrics;
+        $this->proxy = $proxy;
     }
 
     /**
@@ -136,12 +145,32 @@ class Request
 
         while ($this->hostPool->hasNext()) {
             try {
-                $this->guzzleClient->setBaseUrl($this->hostPool->getNext());
+
+                $baseUrl = $this->hostPool->getNext();
+
+                $this->guzzleClient->setBaseUrl($baseUrl);
 
                 /** @var GuzzleRequest $guzzleRequest */
                 $guzzleRequest = $this->guzzleClient->{$this->method}(
                     array($this->url, $this->binds)
                 );
+
+                $this->debug(sprintf("hostPoolName: %s, BaseUrl %s, url: %s, method: %s, this->headers: %s, guzzle->headers: %s",
+                        $this->hostPool->getName(),
+                        $baseUrl,
+                        $this->url,
+                        $this->method,
+                        var_export($this->headers, true),
+                        var_export($guzzleRequest->getHeaders(), true)
+                    )
+                );
+
+                if (!is_null($this->proxy)) {
+                    $this->debug("Proxy is false null hurrey");
+                } else {
+                    $this->debug("Proxy is true :( will addheaders whatever");
+                }
+
                 $guzzleRequest->addHeaders($this->headers);
                 if ($this->body && $guzzleRequest instanceof EntityEnclosingRequest) {
                     /** @var EntityEnclosingRequest $guzzleRequest */
@@ -212,6 +241,14 @@ class Request
     public function getHeaders()
     {
         return $this->headers;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProxy()
+    {
+        return $this->proxy;
     }
 
     /**
