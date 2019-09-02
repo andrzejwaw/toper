@@ -77,7 +77,7 @@ class Request
      * @param HostPoolInterface $hostPool
      * @param GuzzleClientInterface $guzzleClient
      * @param MetricsInterface $metrics
-     * @param bool $proxy
+     * @param ProxyDecoratorInterface $proxy
      */
     public function __construct(
         $method,
@@ -155,15 +155,15 @@ class Request
                     array($this->url, $this->binds)
                 );
 
-                $this->debug(sprintf("hostPoolName: %s, BaseUrl %s, url: %s, method: %s, this->headers: %s, guzzle->headers: %s",
-                        $this->hostPool->getName(),
-                        $baseUrl,
-                        $this->url,
-                        $this->method,
-                        var_export($this->headers, true),
-                        var_export($guzzleRequest->getHeaders(), true)
-                    )
-                );
+//                $this->debug(sprintf("hostPoolName: %s, BaseUrl %s, url: %s, method: %s, this->headers: %s, guzzle->headers: %s",
+//                        $this->hostPool->getName(),
+//                        $baseUrl,
+//                        $this->url,
+//                        $this->method,
+//                        var_export($this->headers, true),
+//                        var_export($guzzleRequest->getHeaders(), true)
+//                    )
+//                );
 
                 $guzzleRequest->addHeaders($this->headers);
 
@@ -175,8 +175,7 @@ class Request
 
                 $this->updateQueryParams($guzzleRequest);
 
-                if (!is_null($this->proxy) && $this->proxy) {
-                    $this->debug("Proxy is true hurray, will add headers and so on");
+                if (!is_null($this->proxy)) {
                     $this->proxy->decorate($guzzleRequest);
                 } else {
                     $this->debug("No proxy set :(, will not add any header");

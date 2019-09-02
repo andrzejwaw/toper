@@ -28,7 +28,7 @@ class Client implements ClientInterface
      * @param HostPoolProviderInterface     $hostPoolProvider
      * @param GuzzleClientFactoryInterface  $guzzleClientFactory
      * @param MetricsInterface|null         $metrics
-     * @param bool                          $proxy
+     * @param ProxyDecoratorInterface       $proxy
      */
     public function __construct(
         HostPoolProviderInterface $hostPoolProvider,
