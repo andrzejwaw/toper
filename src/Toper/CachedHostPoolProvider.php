@@ -114,9 +114,4 @@ class CachedHostPoolProvider implements HostPoolProviderInterface
         $this->storage->set(self::CREATE_CACHE_TIME_KEY, $this->createCacheTime);
         $this->storage->save();
     }
-
-    public function getServiceName()
-    {
-        return $this->hostPoolProvider->getServiceName();
-    }
 }
