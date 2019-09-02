@@ -245,7 +245,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $instance->send();
     }
 
-
     /**
      * @test
      */
@@ -324,6 +323,29 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function shouldMeasureMetrics()
+    {
+        $stats = $this->getMockBuilder('Toper\MetricsStub')->getMock();
+
+        $guzzleClient = $this->createGuzzleClientMock();
+        $this->hostPool = new SimpleHostPool(array(self::BASE_URL1));
+
+        $guzzleResponse = new GuzzleResponse(200, array(), 'ok');
+
+        $guzzleRequest = $this->createGuzzleEntityEnclosingRequest($guzzleResponse);
+
+        $this->prepareGuzzleClientMock($guzzleClient, $guzzleRequest, Request::PUT);
+
+        $stats->expects($this->once())
+            ->method('increment');
+
+        $instance = $this->createInstance(Request::PUT, array(), $guzzleClient);
+        $instance->send();
+    }
+
+    /**
+     * @test
+     */
     public function shouldSetQueryParam()
     {
         $paramName1 = 'name';
@@ -381,14 +403,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     private function createInstance(
         $method,
         array $binds,
-        GuzzleClientInterface $guzzleClient
+        GuzzleClientInterface $guzzleClient,
+        MetricsInterface $metrics = null
     ) {
         return new Request(
             $method,
             self::URL,
             $binds,
             $this->hostPool,
-            $guzzleClient
+            $guzzleClient,
+            $metrics
         );
     }
 
@@ -408,7 +432,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     private function createGuzzleRequest(GuzzleResponse $guzzleResponse)
     {
-
         $guzzleRequest = $this->getMockBuilder('Guzzle\Http\Message\Request')
             ->disableOriginalConstructor()
             ->getMock();
