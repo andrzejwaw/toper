@@ -25,4 +25,9 @@ class StaticHostPoolProvider implements HostPoolProviderInterface
     {
         return new SimpleHostPool($this->hosts);
     }
+
+    public function getServiceName()
+    {
+        return null;
+    }
 }
