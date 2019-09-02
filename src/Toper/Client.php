@@ -34,7 +34,7 @@ class Client implements ClientInterface
         HostPoolProviderInterface $hostPoolProvider,
         GuzzleClientFactoryInterface $guzzleClientFactory,
         MetricsInterface $metrics = null,
-        $proxy = false
+        ProxyDecoratorInterface $proxy = null
     ) {
         $this->hostPoolProvider = $hostPoolProvider;
         $this->guzzleClientFactory = $guzzleClientFactory;

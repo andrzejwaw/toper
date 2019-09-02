@@ -86,7 +86,7 @@ class Request
         HostPoolInterface $hostPool,
         GuzzleClientInterface $guzzleClient,
         MetricsInterface $metrics = null,
-        $proxy = false
+        ProxyDecoratorInterface $proxy = null
 
     ) {
         $this->method = $method;
@@ -165,19 +165,22 @@ class Request
                     )
                 );
 
-                if (!is_null($this->proxy) && $this->proxy) {
-                    $this->debug("Proxy is true null hurrey, will add headers and so on");
-                } else {
-                    $this->debug("No proxy set :(, will not add any header");
-                }
-
                 $guzzleRequest->addHeaders($this->headers);
+
+
                 if ($this->body && $guzzleRequest instanceof EntityEnclosingRequest) {
                     /** @var EntityEnclosingRequest $guzzleRequest */
                     $guzzleRequest->setBody($this->body);
                 }
 
                 $this->updateQueryParams($guzzleRequest);
+
+                if (!is_null($this->proxy) && $this->proxy) {
+                    $this->debug("Proxy is true hurray, will add headers and so on");
+                    $this->proxy->decorate($guzzleRequest);
+                } else {
+                    $this->debug("No proxy set :(, will not add any header");
+                }
 
                 $this->measure(sprintf("topper.request.%s.count", $this->method), $this->url);
 
