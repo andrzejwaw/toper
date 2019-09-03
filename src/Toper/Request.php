@@ -181,7 +181,9 @@ class Request
                     $this->debug("No proxy set :(, will not add any header");
                 }
 
-                $this->measure(sprintf("topper.request.%s.count", $this->method), $this->url);
+                if ($this->metrics != null) {
+                    $this->metrics->increment($this->method, $this->url);
+                }
 
                 return new Response($guzzleRequest->send());
             } catch (ClientErrorResponseException $e) {

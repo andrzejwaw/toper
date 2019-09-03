@@ -4,8 +4,5 @@ namespace Toper;
 
 interface MetricsInterface
 {
-    /**
-     * @return string
-     */
-    public function increment($metric);
+    public function increment($method, $url);
 }
