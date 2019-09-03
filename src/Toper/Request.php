@@ -155,15 +155,15 @@ class Request
                     array($this->url, $this->binds)
                 );
 
-//                $this->debug(sprintf("hostPoolName: %s, BaseUrl %s, url: %s, method: %s, this->headers: %s, guzzle->headers: %s",
-//                        $this->hostPool->getName(),
-//                        $baseUrl,
-//                        $this->url,
-//                        $this->method,
-//                        var_export($this->headers, true),
-//                        var_export($guzzleRequest->getHeaders(), true)
-//                    )
-//                );
+                $this->debug(sprintf("hostPoolName: %s, BaseUrl %s, url: %s, method: %s, this->headers: %s, guzzle->headers: %s",
+                        $this->hostPool->getName(),
+                        $baseUrl,
+                        $this->url,
+                        $this->method,
+                        var_export($this->headers, true),
+                        var_export($guzzleRequest->getHeaders(), true)
+                    )
+                );
 
                 $guzzleRequest->addHeaders($this->headers);
 
